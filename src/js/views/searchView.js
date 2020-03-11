@@ -1,6 +1,6 @@
 import { elements } from './base';
 // 'Pasta with Tomato and Spinach
-const limitRecipeTitle = (title, limit = 17) => {
+const limitRecipeTitle = (title, limit = 18) => {
 	if (title.length > limit) {
 		let newTitle = [];
 
@@ -36,10 +36,6 @@ const renderRecipe = (recipe) => {
 	elements.searchResultsList.insertAdjacentHTML('beforeend', markup);
 };
 
-export const renderResults = (recipes) => {
-	recipes.forEach(renderRecipe);
-};
-
 export const getInput = () => elements.searchInput.value;
 
 export const clearInput = () => {
@@ -48,4 +44,43 @@ export const clearInput = () => {
 
 export const clearPrevResults = () => {
 	elements.searchResultsList.innerHTML = '';
+	elements.searchResultsPages.innerHTML = '';
+};
+
+// type: 'prev' OR 'next'
+const createButton = (currPage, type) => `
+    <button class="btn-inline results__btn--${type}" data-goto=${type === 'prev' ? currPage - 1 : currPage + 1}>
+        <span>Page ${type === 'prev' ? currPage - 1 : currPage + 1}</span>
+        <svg class="search__icon">
+            <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}"></use>
+        </svg>
+    </button>
+`;
+const renderButtons = (currPage, numResults, resPerPage) => {
+	const pages = Math.ceil(numResults / resPerPage);
+	let button;
+
+	if (currPage === 1 && pages > 1) {
+		// Button to go to next page
+		button = createButton(currPage, 'next');
+	}
+	else if (currPage < pages) {
+		// display both buttons
+		button = createButton(currPage, 'prev') + createButton(currPage, 'next');
+	}
+	else if (currPage === pages && pages > 1) {
+		// Button to go prev page
+		button = createButton(currPage, 'prev');
+	}
+	elements.searchResultsPages.insertAdjacentHTML('afterbegin', button);
+};
+
+export const renderResults = (recipes, page = 1, resPerPage = 10) => {
+	const start = (page - 1) * resPerPage;
+	const end = page * resPerPage;
+
+	recipes.slice(start, end).forEach(renderRecipe);
+
+	// render pagination buttons
+	renderButtons(page, recipes.length, resPerPage);
 };
