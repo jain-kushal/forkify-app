@@ -9,7 +9,7 @@ export default class Search {
 		try {
 			const res = await axios.get(`${API_URL}/search?q=${this.query}`);
 			this.recipes = res.data.recipes;
-			console.log(res);
+			// console.log(res);
 		} catch (err) {
 			console.log(err);
 		}
