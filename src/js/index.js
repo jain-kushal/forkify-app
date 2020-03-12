@@ -18,7 +18,7 @@ const state = {};
 
 const handleSearch = async () => {
 	// get query from view
-	const query = searchView.getInput(); //TODO
+	const query = searchView.getInput();
 	// console.log(query);
 	if (query) {
 		// create new search object and add it to state
@@ -76,6 +76,8 @@ const controlRecipe = async () => {
 			// Calculate servings and cook time
 			state.recipe.calcTime();
 
+			// normalize ingredients
+			state.recipe.parseIngredients();
 			console.log(state.recipe);
 		} catch (error) {
 			console.log(error);

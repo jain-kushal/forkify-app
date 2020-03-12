@@ -11,7 +11,7 @@ export default class Search {
 			this.recipes = res.data.recipes;
 			// console.log(res);
 		} catch (err) {
-			console.log(err);
+			console.log(`Error in Search.js: ${err}`);
 		}
 	}
 }
